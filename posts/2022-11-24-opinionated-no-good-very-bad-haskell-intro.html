@@ -28,16 +28,23 @@
     <section class="header">
         Posted on November 24, 2022
         
-            by Hacked Haskeller
+        by Hacked Haskeller
         
     </section>
-    <section classs="version">
-        
-            Version: 0.0.1-alpha
-        
+    
+    <section class="version">
+        Version: 0.0.1-alpha
     </section>
+    
+    
+    <section class="in-progress">
+        Warning: This post is still in progress. It will probably contain mistakes
+        and will be revised at a future date.
+    </section>
+    
     <section>
-        <p>Lets start with what everyone does when they are learning a new language: Hello world.</p>
+        <h2 id="hello-world">Hello World</h2>
+<p>Lets start with what everyone does when they are learning a new language: Hello world.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>helloWorld <span class="ot">=</span> <span class="fu">putStrLn</span> <span class="st">&quot;Hello World&quot;</span></span></code></pre></div>
 <p>Well that doesn’t look to bad! Not a Monad or Monoid in sight. (or is there???) Lets take it up a notch and try and ask who we are saying hello to.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>helloName <span class="ot">=</span> <span class="kw">do</span></span>
@@ -45,23 +52,24 @@
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  name <span class="ot">&lt;-</span> <span class="fu">getLine</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">putStrLn</span> (<span class="st">&quot;Hello &quot;</span> <span class="op">++</span> name)</span></code></pre></div>
 <p>Hmmm, well that is a bit different, but if I take it slow I can guess what everything does. As you might of surmised <code>putStrLn</code> takes a string and puts it out to the terminal and <code>someVariable &lt;- getLine</code> gets a line from the terminal and assign it to <code>someVariable</code>. Easy enough.</p>
-<p>Young Haskell Dev: What about Monads? I’ve heard that you can’t do any Haskell without Monads?</p>
-<p>Well you are correct. The above examples do use <code>IO</code>, which is Monadic.</p>
-<p>Young Haskell Dev: Wait what does that mean?</p>
-<p>Well to be perfectly honest as far as we are concerned it means it implements the Monad type <code>class</code>.</p>
-<p>Young Haskell Dev: A type class?</p>
-<p>Yeah, like an interface in most other languages. Where you basically take a group of functions and give it a name. There may also be some implicit rules you must follow if you implement the type class, but for now we wont worry about that as we’ll only be using them.</p>
-<p>Young Haskell Dev: Oh, that doesn’t sound so bad.</p>
-<p>It really isn’t. You just have to under how a type implements the Monad type class to understand what it means to use it Monadically. Plus, when you understand that you can then make your own analogy, post it online, and then put it on your CV.</p>
-<p>Young Haskell Dev: So what is the interface then?</p>
-<p>Well if you pop into GHCi (the REPL of the GHC compiler) and do <code>:i Monad</code> you’ll see information about the <code>Monad</code> type class. It will have a fair amount of output, but you should see something like</p>
+<h2 id="where-is-the-monad">Where is the Monad?</h2>
+<p><span class="speaker">Young Haskell Dev:</span> What about Monads? I’ve heard that you can’t do any Haskell without Monads?</p>
+<p><span class="speaker">Hacked Haskeller:</span> Well you are correct. The above examples do use <code>IO</code>, which is Monadic.</p>
+<p><span class="speaker">Young Haskell Dev:</span> Wait what does that mean?</p>
+<p><span class="speaker">Hacked Haskeller:</span> Well to be perfectly honest as far as we are concerned it means it implements the Monad type <code>class</code>.</p>
+<p><span class="speaker">Young Haskell Dev:</span> A type class?</p>
+<p><span class="speaker">Hacked Haskeller:</span> Yeah, like an interface in most other languages. Where you basically take a group of functions and give it a name. There may also be some implicit rules you must follow if you implement the type class, but for now we wont worry about that as we’ll only be using them.</p>
+<p><span class="speaker">Young Haskell Dev:</span> Oh, that doesn’t sound so bad.</p>
+<p><span class="speaker">Hacked Haskeller:</span> It really isn’t. You just have to under how a type implements the Monad type class to understand what it means to use it Monadically. Plus, when you understand that you can then make your own analogy, post it online, and then put it on your CV.</p>
+<p><span class="speaker">Young Haskell Dev:</span> So what is the interface then?</p>
+<p><span class="speaker">Hacked Haskeller:</span> Well if you pop into GHCi (the REPL of the GHC compiler) and do <code>:i Monad</code> you’ll see information about the <code>Monad</code> type class. It will have a fair amount of output, but you should see something like</p>
 <p>Note: <code>:i</code> is short for <code>:info</code> in GHCi</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Applicative</span> m <span class="ot">=&gt;</span> <span class="dt">Monad</span> m <span class="kw">where</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  (&gt;&gt;=) ::</span> m a <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> m b) <span class="ot">-&gt;</span> m b</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ot">  (&gt;&gt;) ::</span> m a <span class="ot">-&gt;</span> m b <span class="ot">-&gt;</span> m b</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ot">  return ::</span> a <span class="ot">-&gt;</span> m a</span></code></pre></div>
-<p>Young Haskell Dev: Wait, hold up, I don’t see any of that in the examples up above! Why are you telling me about Monads if I don’t see those above?</p>
-<p>First of all, you asked, and second the Monad type class is used so often and so much it has special syntactic sugar. To write <code>helloName</code> without the sugar it would look like</p>
+<pre class="language-haskell"><code>class Applicative m =&gt; Monad m where
+  (&gt;&gt;=) :: m a -&gt; (a -&gt; m b) -&gt; m b
+  (&gt;&gt;) :: m a -&gt; m b -&gt; m b
+  return :: a -&gt; m a</code></pre>
+<p><span class="speaker">Young Haskell Dev:</span> Wait, hold up, I don’t see any of that in the examples up above! Why are you telling me about Monads if I don’t see those above?</p>
+<p><span class="speaker">Hacked Haskeller:</span> First of all, you asked, and second the Monad type class is used so often and so much it has special syntactic sugar. To write <code>helloName</code> without the sugar it would look like</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">helloNameNoSugar ::</span> <span class="dt">IO</span> ()</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>helloNameNoSugar <span class="ot">=</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">putStrLn</span> <span class="st">&quot;What is your name?&quot;</span> <span class="op">&gt;&gt;</span></span>
@@ -74,8 +82,8 @@
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">return</span><span class="ot"> ::</span> <span class="dt">Monad</span> m <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> m a</span></code></pre></div>
 <p>Note: <code>:t</code> is short for <code>:type</code> in GHCi</p>
 <p>You can see that when we ask for the type of <code>pure</code> and the type of <code>return</code> they are same except for one says <code>Applicative</code> and the other says <code>Monad</code></p>
-<p>Young Haskell Dev: Hey I saw <code>Applicative</code> in the <code>Monad</code> definition! What is that thing?</p>
-<p>You’re correct, to be a <code>Monad</code> you must first be an <code>Applicative</code>. <code>Applicative</code> is just another type class and you can ask GHCi about it as well (<code>:i Applicative</code>):</p>
+<p><span class="speaker">Young Haskell Dev:</span> Hey I saw <code>Applicative</code> in the <code>Monad</code> definition! What is that thing?</p>
+<p><span class="speaker">Hacked Haskeller:</span> You’re correct, to be a <code>Monad</code> you must first be an <code>Applicative</code>. <code>Applicative</code> is just another type class and you can ask GHCi about it as well (<code>:i Applicative</code>):</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Functor</span> f <span class="ot">=&gt;</span> <span class="dt">Applicative</span> f <span class="kw">where</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  pure ::</span> a <span class="ot">-&gt;</span> f a</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ot">  (&lt;*&gt;) ::</span> f (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</span>
@@ -87,16 +95,19 @@
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ot">  fmap ::</span> (a <span class="ot">-&gt;</span> b) <span class="ot">-&gt;</span> f a <span class="ot">-&gt;</span> f b</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ot">  (&lt;$) ::</span> a <span class="ot">-&gt;</span> f b <span class="ot">-&gt;</span> f a</span></code></pre></div>
 <p>If a type implements <code>Monad</code> you can use any of the above functions with that type. More specifically, you can then use <code>fmap</code>, <code>&lt;*&gt;</code>, and the do syntactic sugar.</p>
-<p>Young Haskell Dev: Why would I want to use those functions? I don’t use them in other languages.</p>
-<p>[ transition to talking about fmap is map, and how Haskell is lazy like how promises work in other languages also Haskell is a language of expressions not statements so we need those functions to structure and control the flow of our program … or something similar]</p>
+<p><span class="speaker">Young Haskell Dev:</span> Why would I want to use those functions? I don’t use them in other languages.</p>
+<p>[wip][ transition to talking about fmap is map, and how Haskell is lazy like how promises work in other languages also Haskell is a language of expressions not statements so we need those functions to structure and control the flow of our program … or something similar]</p>
     </section>
 </article>
 
         </main>
 
-        <!-- <footer>
-             Site proudly generated by
-             <a href="http://jaspervdj.be/hakyll">Hakyll</a>
-             </footer> -->
+        <footer>
+            Site proudly generated by
+            <a href="http://jaspervdj.be/hakyll">Hakyll</a>
+            <section class="version">
+                Site Version: 0.1.0
+            </section>
+        </footer>
     </body>
 </html>
